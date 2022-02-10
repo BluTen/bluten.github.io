@@ -12,5 +12,5 @@ jobs:
     - uses: actions/first-interaction@v1
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: format('Hello {0}, Thanks for informing about this issue BluTen will soon reach out to this issue.', ${{github.actor}})
-        pr-message: format('Hello {0}, Thanks for creating a pull request BluTen will soon reach out.', ${{github.actor}})
+        issue-message: ${{format('Hello {0}, Thanks for informing about this issue BluTen will soon reach out to this issue.', github.actor)}}
+        pr-message: ${{format('Hello {0}, Thanks for creating a pull request BluTen will soon reach out.', github.actor)}}
