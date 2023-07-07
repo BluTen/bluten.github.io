@@ -13,9 +13,55 @@ permalink: /projects/
       href="https://fonts.googleapis.com/css2?family=Kanit:wght@700&family=Poppins:wght@300;400;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/css/main.css" />
+    <link rel="stylesheet" href="/css/main.css" />
   </head>
   <body>
-    <nav></nav>
+    <nav>
+      <div class="nav-logo">BLUTEN</div>
+      <ul class="nav-links">
+        <li><a href="/" class="sec-btn nav-link">Home</a></li>
+        <li><a href="#" class="sec-btn nav-link current">Projects</a></li>
+      </ul>
+      <button type="button" class="nav-button">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </button>
+    </nav>
+    <div class="body">
+      <div class="proj">
+        <div class="proj-container">
+          <div class="proj-img"><img src="" alt="" /></div>
+          <div class="proj-detail">
+            <a href="/projects/projectile" class="sec-btn proj-title">
+              Projectile Simulator
+            </a>
+            <p class="proj-desc">
+              A little website that helps you understand motion of a projectile
+              in 2D plane.
+            </p>
+            <div class="proj-action">
+              <a href="#" class="prm-btn github">
+                <div class="border-top"></div>
+                <div class="btn-text">
+                  <div class="img"></div>
+                  <div>GitHub</div>
+                </div>
+                <div class="border-bottom"></div>
+              </a>
+              <a href="#" class="prm-btn download">
+                <div class="border-top"></div>
+                <div class="btn-text">
+                  <div class="img"></div>
+                  <div>Download</div>
+                </div>
+                <div class="border-bottom"></div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/js/main.js"></script>
   </body>
 </html>

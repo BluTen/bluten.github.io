@@ -1,0 +1,477 @@
+$primary-text: #f2e9e4;
+$primary-action: #4a4e69;
+$primary-background: #22223b;
+$secondary-text: #c9ada7;
+$secondary-background: #9a8c98;
+
+*,
+::after,
+::before {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Poppins", Arial;
+  font-size: 16px;
+  color: $primary-text;
+}
+
+body {
+  margin-inline: 5rem;
+  height: 100vh;
+  background-color: $primary-background;
+  /* outline: red solid 1px; */
+}
+
+button {
+  background-color: transparent;
+  border: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  width: 100%;
+  height: 3.5rem;
+  padding-inline: 4rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: $secondary-text;
+  color: $primary-background;
+
+  .nav-logo {
+    font-family: "Kanit", Arial;
+    font-size: 2.5rem;
+  }
+
+  .nav-links {
+    display: flex;
+    margin-left: auto;
+  }
+
+  .nav-links li {
+    list-style: none;
+    margin-right: 1.5em;
+  }
+
+  .nav-link {
+    color: $primary-background;
+    background-color: inherit;
+    position: relative;
+    cursor: pointer;
+    font-size: 1.25rem;
+  }
+
+  .nav-link::after {
+    background-color: $primary-background;
+  }
+
+  .current {
+    font-weight: 700;
+  }
+
+  .current::before {
+    content: "> ";
+  }
+
+  .nav-button {
+    display: none;
+  }
+}
+
+.flex-centered {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+  font-family: "Kanit", Arial;
+  font-size: 9rem;
+  font-weight: bold;
+  color: $primary-text;
+}
+
+.body {
+  padding-top: 3.5rem;
+}
+
+.prm-btn {
+  cursor: pointer;
+  position: relative;
+  font-size: 1.2rem;
+  color: $secondary-text;
+  border-radius: 4px;
+  background-color: $primary-action;
+  overflow: hidden;
+  z-index: 1;
+
+  .btn-text {
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    margin: 4px;
+    background-color: $primary-action;
+  }
+
+  .border-top {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 50%;
+    width: 100%;
+    -webkit-clip-path: inset(0 0 0 0 round 4px 4px 0 0);
+    clip-path: inset(0 0 0 0 round 4px 4px 0 0);
+    z-index: -1;
+  }
+
+  .border-top::before {
+    content: "";
+    overflow: hidden;
+    position: absolute;
+    left: -50%;
+    bottom: 0;
+    height: 800%;
+    width: 200%;
+    background-color: #c9ada7;
+    transform-origin: 50% 100%;
+    transform: rotate(-180deg);
+    transition: transform 0.4s cubic-bezier(0.79, 0.14, 0.15, 0.86);
+    /*   outline: red solid 1px; */
+  }
+
+  .border-bottom {
+    position: absolute;
+    bottom: 0;
+    height: 50%;
+    width: 100%;
+    -webkit-clip-path: inset(0 0 0 0 round 0 0 4px 4px);
+    clip-path: inset(0 0 0 0 round 0 0 4px 4px);
+    z-index: -1;
+  }
+
+  .border-bottom::before {
+    content: "";
+    overflow: hidden;
+    position: absolute;
+    left: -50%;
+    top: 0;
+    height: 800%;
+    width: 200%;
+    background-color: #c9ada7;
+    transform-origin: 50% 0;
+    transform: rotate(-180deg);
+    transition: transform 0.4s cubic-bezier(0.79, 0.14, 0.15, 0.86);
+    /*   outline: red solid 1px; */
+  }
+}
+
+.prm-btn:hover {
+  .border-top::before,
+  .border-bottom::before {
+    transform: rotate(0);
+  }
+}
+
+.sec-btn {
+  cursor: pointer;
+  position: relative;
+  font-size: 1.2rem;
+  color: $secondary-text;
+  border-radius: 4px;
+  background-color: $primary-action;
+  z-index: 1;
+}
+
+.sec-btn::after {
+  cursor: pointer;
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  border-radius: 5px;
+  background-color: $secondary-text;
+  transition: all 0.4s ease;
+}
+
+.sec-btn:hover::after {
+  left: 0;
+  width: 100%;
+}
+
+.proj-title {
+  padding-bottom: 5px;
+  color: $primary-action;
+  background-color: $primary-text;
+}
+
+.proj-title::after {
+  height: 4px;
+  background-color: $primary-action;
+}
+
+.proj-container {
+  display: flex;
+  margin: 3rem 0;
+  border-radius: 8px;
+  color: $primary-action;
+  background-color: $primary-text;
+}
+
+.proj-img {
+  background-color: red;
+  width: 35%;
+  max-width: 500px;
+  border-radius: 8px 0 0 8px;
+}
+
+.proj-detail {
+  padding: 1.5rem;
+  padding-left: 2rem;
+  width: 70%;
+}
+
+.proj-detail > a {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 2rem;
+}
+
+.proj-desc {
+  padding-top: 1rem;
+  font-size: 1rem;
+}
+
+.proj-action {
+  display: flex;
+  padding-top: 1.5rem;
+}
+
+.download,
+.github {
+  // background-color: #1baa4f;
+  margin-right: 2rem;
+  color: #fff;
+
+  .btn-text {
+    display: flex;
+    align-items: center;
+  }
+
+  .border-top::before,
+  .border-bottom::before {
+    background-color: $secondary-text;
+  }
+
+  .img {
+    height: 24px;
+    width: 24px;
+    background-size: 24px;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-right: 8px;
+  }
+}
+
+.github {
+  background-color: #44474c;
+
+  .btn-text,
+  .border-top,
+  .border-bottom {
+    background-color: #44474c;
+  }
+
+  .border-top::before,
+  .border-bottom::before {
+    background-color: #787e87;
+  }
+  // .border-top::before,
+  // .border-bottom::before {
+  //   background-color: #999999;
+  // }
+
+  .img {
+    background-image: url("/img/github-32px.png");
+  }
+}
+
+.download {
+  background-color: #1baa4f;
+
+  .btn-text,
+  .border-top,
+  .border-bottom {
+    background-color: hsl(142, 73%, 39%);
+  }
+
+  .border-top::before,
+  .border-bottom::before {
+    background-color: hsl(142, 70%, 52%);
+  }
+  // .border-top::before,
+  // .border-bottom::before {
+  //   background-color: #068835;
+  // }
+
+  .img {
+    background-size: 28px;
+    background-image: url("/img/download_white.svg");
+  }
+}
+
+// .github > .img,
+// .download > .img {
+// }
+
+// .github {
+//   margin-right: 2rem;
+//   background-color: #44474c;
+// }
+
+// .github > .img {
+//   background-image: url("/img/github-32px.png");
+// }
+
+// .download {
+//   background-color: #1baa4f;
+// }
+
+// .download > .img {
+//   background-image: url("/img/download_white.svg");
+// }
+
+@media screen and (max-width: 768px) {
+  body {
+    margin-inline: 3rem;
+  }
+
+  .proj {
+    max-width: 25rem;
+    margin-inline: auto;
+  }
+
+  .proj-container {
+    flex-direction: column;
+  }
+
+  .proj-img {
+    max-width: none;
+    width: 100%;
+    height: 150px;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .proj-detail {
+    width: 100%;
+  }
+
+  .proj-action {
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  body {
+    margin-inline: 1.5rem;
+  }
+
+  nav {
+    /*         position */
+    padding-inline: 2rem;
+    z-index: 999;
+
+    .nav-links {
+      transform: translateX(0);
+      position: absolute;
+      top: 3.5rem;
+      right: 100%;
+      width: 100%;
+      padding: 0 1.5rem 1rem;
+      flex-direction: column;
+      align-items: flex-end;
+      background-color: $primary-text;
+      opacity: 0;
+      transition: all 0.4s ease;
+      z-index: -100;
+    }
+
+    .nav-links.open {
+      opacity: 1;
+      top: 3.5rem;
+      right: 0;
+    }
+
+    .nav-links li {
+      /* flex-basis: auto; */
+      margin: 1rem 0 0 0;
+    }
+
+    .nav-button {
+      display: block;
+      cursor: pointer;
+      margin-left: auto;
+      background-color: inherit;
+
+      .bar {
+        width: 30px;
+        height: 4px;
+        margin: 5px 0;
+        border-radius: 4px;
+        background-color: $primary-background;
+        transition: all 0.3s ease;
+        pointer-events: none;
+      }
+
+      .bar.close:nth-child(1) {
+        transform: translateY(9px) rotate(-45deg);
+      }
+
+      .bar.close:nth-child(2) {
+        opacity: 0;
+        transform: translateX(3rem);
+      }
+
+      .bar.close:nth-child(3) {
+        transform: translateY(-9px) rotate(45deg);
+      }
+    }
+  }
+
+  .title {
+    font-size: 5rem;
+  }
+
+  .btn {
+    font-size: 1.25rem;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .proj-action {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .github,
+  .download {
+    margin: 0;
+    margin-bottom: 1.5rem;
+  }
+}
