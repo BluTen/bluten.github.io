@@ -264,7 +264,8 @@ nav {
 }
 
 .download,
-.github {
+.github,
+.link {
   // background-color: #1baa4f;
   margin-right: 2rem;
   color: #fff;
@@ -333,6 +334,32 @@ nav {
   .img {
     background-size: 28px;
     background-image: url("/img/download_white.svg");
+  }
+}
+
+.link {
+  background-color: #1baa4f;
+
+  .btn-text,
+  .border-top,
+  .border-bottom {
+    background-color: hsl(142, 73%, 39%);
+  }
+
+  .border-top::before,
+  .border-bottom::before {
+    background-color: hsl(142, 70%, 52%);
+  }
+  // .border-top::before,
+  // .border-bottom::before {
+  //   background-color: #068835;
+  // }
+
+  .img {
+    background-size: contain;
+    -webkit-filter: invert(1);
+    filter: invert(1);
+    background-image: url("/img/link.png");
   }
 }
 

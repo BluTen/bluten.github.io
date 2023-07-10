@@ -243,23 +243,28 @@ nav .nav-button {
 }
 
 .download,
-.github {
+.github,
+.link {
   margin-right: 2rem;
   color: #fff;
 }
 .download .btn-text,
-.github .btn-text {
+.github .btn-text,
+.link .btn-text {
   display: flex;
   align-items: center;
 }
 .download .border-top::before,
 .download .border-bottom::before,
 .github .border-top::before,
-.github .border-bottom::before {
+.github .border-bottom::before,
+.link .border-top::before,
+.link .border-bottom::before {
   background-color: #c9ada7;
 }
 .download .img,
-.github .img {
+.github .img,
+.link .img {
   height: 24px;
   width: 24px;
   background-size: 24px;
@@ -299,6 +304,25 @@ nav .nav-button {
 .download .img {
   background-size: 28px;
   background-image: url("/img/download_white.svg");
+}
+
+.link {
+  background-color: #1baa4f;
+}
+.link .btn-text,
+.link .border-top,
+.link .border-bottom {
+  background-color: hsl(142deg, 73%, 39%);
+}
+.link .border-top::before,
+.link .border-bottom::before {
+  background-color: hsl(142deg, 70%, 52%);
+}
+.link .img {
+  background-size: contain;
+  -webkit-filter: invert(1);
+  filter: invert(1);
+  background-image: url("/img/link.png");
 }
 
 @media screen and (max-width: 768px) {
