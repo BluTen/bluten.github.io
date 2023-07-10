@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projectile Motion Simulator - Bluten</title>
+    <style>
+      *,
+      ::after,
+      ::before {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        overflow: hidden;
+        font-family: "Courier New", Courier, monospace;
+      }
+
+      input {
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+      }
+
+      body {
+        position: relative;
+        height: 100vh;
+      }
+
+      .title {
+        position: absolute;
+        z-index: 99;
+        margin-top: 20px;
+        margin-left: 20px;
+        color: #000;
+        text-decoration: none;
+      }
+
+      .sky {
+        position: absolute;
+        top: 0;
+        height: 100vh;
+        width: 100vw;
+        padding-bottom: 200px;
+        background-color: #2b88df;
+      }
+
+      .sim-controls {
+        z-index: 99;
+        display: flex;
+        align-items: center;
+        position: absolute;
+        margin-right: 20px;
+        margin-top: 10px;
+        top: 0;
+        right: 0;
+      }
+
+      .sim-controls > span {
+        font-weight: 600;
+        font-size: 18px;
+        padding-left: 10px;
+      }
+
+      .sim-controls > div {
+        content: "";
+        width: 50px;
+        height: 50px;
+        padding: 10px;
+        margin-left: 10px;
+        background-color: aliceblue;
+        background-repeat: no-repeat;
+        background-position: center;
+        border-radius: 50%;
+      }
+
+      .sim-controls > div:hover {
+        cursor: pointer;
+      }
+
+      #slow {
+        background-size: contain;
+        background-image: url("/img/left.png");
+      }
+
+      #play {
+        background-size: 35px;
+        background-image: url("/img/play.png");
+      }
+
+      #fast {
+        background-size: contain;
+        background-image: url("/img/right.png");
+      }
+
+      .projectile-area {
+        position: relative;
+        margin-left: 55px;
+        height: calc(100% - 5px);
+        overflow: visible;
+      }
+
+      .flag-post {
+        position: absolute;
+        bottom: 100%;
+        left: 25px;
+      }
+
+      #trajectory {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        transform: rotatex(180deg);
+
+        fill: none;
+        stroke: rgba(0, 0, 0, 0.5);
+        stroke-width: 3px;
+        stroke-dasharray: 5px;
+        stroke-linecap: round;
+      }
+
+      #ball {
+        position: absolute;
+        left: 0;
+        bottom: calc(100% + 5px);
+        height: 10px;
+        width: 10px;
+        border-radius: 50%;
+        background-color: #ff0000;
+        transform: translate(-5px, 5px);
+      }
+
+      .ground {
+        position: absolute;
+        bottom: -200px;
+        /* padding-top: 10px; */
+        height: 200px;
+        width: 100vw;
+        background-color: #35b935;
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .ground {
+        transition: bottom 1s ease-in-out;
+      }
+      #ball {
+        transition: all calc(1s / 30) linear;
+      }
+
+      .flag-post {
+        transition: bottom 0.5s linear 1s;
+      }
+
+      @media screen and (min-width: 1120px) {
+        #ball,
+        .ground {
+          bottom: 0;
+        }
+
+        .flag-post {
+          bottom: 200px;
+        }
+      }
+
+      .inputs {
+        padding-left: 20px;
+        display: flex;
+        align-items: center;
+        height: 50px;
+      }
+
+      .input {
+        background-color: #f5f5f5;
+        min-width: 2rem;
+        padding: 3px 5px;
+        margin-inline: 5px;
+        border-radius: 5px;
+      }
+
+      .input:focus-visible {
+        outline: none;
+      }
+
+      .output {
+        padding: 20px 0 0 20px;
+        height: 150px;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+      }
+
+      .output > div {
+        display: block;
+        padding-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body onkeydown="parseRefresh(event)">
+    <div id="area">
+      <a href="/" class="title">
+        <h2 style="margin-bottom: 5px">Projectile Simulator</h2>
+        <h3>- Bluten</h3>
+      </a>
+      <div class="sky">
+        <svg
+          width="25"
+          height="100"
+          xmlns="http://www.w3.org/2000/svg"
+          class="flag-post"
+        >
+          <rect fill="#f0f0f0" width="5" height="100" x="20" y="0" />
+          <path fill="#f00" d="M 0,15 l 20,12.5 l 0,-25 z" />
+        </svg>
+        <div class="sim-controls">
+          <span>1cm::1m (Not for all displays!!!); </span>
+          <span> Time (t) =</span>
+          <span id="currtime">0s</span>
+          <div id="slow"></div>
+          <div id="play"></div>
+          <div id="fast"></div>
+        </div>
+        <div class="projectile-area">
+          <svg xmlns="http://www.w3.org/2000/svg" id="trajectory">
+            <path stroke="rgba(0, 0, 0, .5)" d="M 0,0 l 25,25 l 25,-25" />
+          </svg>
+          <div id="ball"></div>
+        </div>
+      </div>
+      <div class="ground">
+        <div class="output">
+          <div>
+            <span>Maximum Range (R): </span>
+            <span id="R">0</span>
+            <span>m</span>
+          </div>
+          <div>
+            <span>Maximum Height (H<sub>max</sub>): </span>
+            <span id="hmax">0</span>
+            <span>m</span>
+          </div>
+          <div>
+            <span>Total Time (T): </span>
+            <span id="T">0</span>
+            <span>s</span>
+          </div>
+          <div>
+            <span>Horizontal Component of Velocity (V<sub>x</sub>): </span>
+            <span id="vx">0</span>
+            <span>m\s</span>
+          </div>
+          <div>
+            <span>Verticle Component of Velocity (V<sub>y</sub>): </span>
+            <span id="vy">0</span>
+            <span>m\s</span>
+          </div>
+          <div>
+            <span>Current Height (H<sub>t</sub>): </span>
+            <span id="ht">0</span>
+            <span>s</span>
+          </div>
+        </div>
+        <div class="inputs">
+          <span>Inputs -> Initial Velocity (v<sub>o</sub>): </span>
+          <span
+            class="input"
+            id="v0"
+            onkeydown="return parseNumOnlyKey(event)"
+            contenteditable
+            >10</span
+          >
+          <span>m/s | Angle of Projection: </span>
+          <span
+            class="input"
+            id="theta"
+            onkeydown="return parseNumOnlyKey(event)"
+            contenteditable
+            >45</span
+          >
+          <span>deg | Gravity (g): </span>
+          <span
+            class="input"
+            id="g"
+            onkeydown="return parseNumOnlyKey(event)"
+            contenteditable
+            >9.8</span
+          >
+          <span>m/s<sup>2</sup></span>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    function parseNumOnlyKey(key) {
+      if (key.ctrlKey) return true;
+
+      if (key.keyCode === 110 || key.keyCode === 190) {
+        if (key.target.innerText.includes(".")) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+      if (
+        (key.keyCode >= 48 && key.keyCode <= 57) ||
+        (key.keyCode >= 96 && key.keyCode <= 105) ||
+        key.keyCode === 8 ||
+        key.keyCode === 46
+      ) {
+        return true;
+      }
+
+      return false;
+    }
+
+    function parseRefresh(key) {
+      if (
+        key === null ||
+        (!key.ctrlKey && !key.altKey && !key.shiftKey && key.key === "r")
+      ) {
+        totalTime = 0;
+        startTime = 0;
+        elapsedTime = 0;
+        currentTime = 0;
+
+        ball_x = 0;
+        ball_y = 0;
+        ball_v = 0;
+        ball_angle = 0;
+        ball_vx = 0;
+        ball_vy = 0;
+
+        v0 = document.getElementById("v0").innerText;
+        theta = document.getElementById("theta").innerText;
+        gravity = document.getElementById("g").innerText;
+
+        if (v0 === "." || theta === "." || gravity === ".") return;
+
+        running = true;
+        v0 = Number(v0);
+        theta = Number(theta);
+        gravity = Number(gravity);
+
+        v0_x = ball_vx = v0 * Math.cos(degToRad(theta));
+        v0_y = v0 * Math.sin(degToRad(theta));
+        rmax = (v0 ** 2 * Math.sin(2 * degToRad(theta))) / gravity;
+        hmax = v0_y ** 2 / (2 * gravity);
+        totalTime = 2 * (v0_y / gravity);
+
+        // b in equation x = ax - bx^2
+        // g/(2*(v0_x ** 2))
+        var _b = Math.tan(degToRad(theta));
+
+        document
+          .getElementById("trajectory")
+          .firstElementChild.setAttribute(
+            "d",
+            "M 0,0 Q " +
+              (rmax * distance_scale) / 2 +
+              "," +
+              (rmax * _b * distance_scale) / 2 +
+              " " +
+              rmax * distance_scale +
+              ",0"
+          );
+        document.getElementById("R").innerText = rmax.toFixed(2);
+        document.getElementById("hmax").innerText = hmax.toFixed(2);
+        document.getElementById("T").innerText = totalTime.toFixed(2);
+        timeElement.innerText = "0.00s";
+        ball.style.left = ball_x * distance_scale + "px";
+        ball.style.bottom = ball_y * distance_scale + "px";
+        vx.innerText = "0.00";
+        vy.innerText = "0.00";
+        ht.innerText = "0.00";
+      }
+      return true;
+    }
+
+    function degToRad(degrees) {
+      return degrees * (Math.PI / 180);
+    }
+
+    function radToDeg(rad) {
+      return rad / (Math.PI / 180);
+    }
+
+    var ball = document.getElementById("ball");
+    var vx = document.getElementById("vx");
+    var vy = document.getElementById("vy");
+    var ht = document.getElementById("ht");
+    var timeElement = document.getElementById("currtime");
+    var distance_scale = 40;
+    var time_scale = 1;
+    var refresh_rate = 30;
+    var interval_id = 0;
+    var play = false;
+    var running = false;
+
+    var v0 = 0;
+    var v0_x = 0;
+    var v0_y = 0;
+    var theta = 0;
+    var gravity = 0;
+
+    var rmax = 0;
+    var hmax = 0;
+    var totalTime = 0;
+    var startTime = 0;
+    var elapsedTime = 0;
+    var currentTime = 0;
+
+    var ball_x = 0;
+    var ball_y = 0;
+    var ball_v = 0;
+    var ball_angle = 0;
+    var ball_vx = 0;
+    var ball_vy = 0;
+
+    document.getElementById("slow").addEventListener("click", () => {
+      if (time_scale != 1 / 4) {
+        time_scale = time_scale / 2;
+        elapsedTime = currentTime;
+        startTime = 0;
+      }
+    });
+
+    document.getElementById("fast").addEventListener("click", () => {
+      if (time_scale != 4) {
+        time_scale = time_scale * 2;
+        elapsedTime = currentTime;
+        startTime = 0;
+      }
+    });
+
+    document.getElementById("play").addEventListener("click", () => {
+      console.log("Click!");
+      if (play) {
+        play = false;
+        clearInterval(interval_id);
+        document.getElementById("play").style.backgroundImage =
+          'url("/img/play.png")';
+      } else {
+        if (running === false) {
+          v0 = document.getElementById("v0").innerText;
+          theta = document.getElementById("theta").innerText;
+          gravity = document.getElementById("g").innerText;
+
+          if (v0 === "." || theta === "." || gravity === ".") return;
+
+          running = true;
+          v0 = Number(v0);
+          theta = Number(theta);
+          gravity = Number(gravity);
+
+          v0_x = ball_vx = v0 * Math.cos(degToRad(theta));
+          v0_y = v0 * Math.sin(degToRad(theta));
+          rmax = (v0 ** 2 * Math.sin(2 * degToRad(theta))) / gravity;
+          hmax = v0_y ** 2 / (2 * gravity);
+          totalTime = 2 * (v0_y / gravity);
+
+          // b in equation x = ax - bx^2
+          // g/(2*(v0_x ** 2))
+          var _b = Math.tan(degToRad(theta));
+
+          document
+            .getElementById("trajectory")
+            .firstElementChild.setAttribute(
+              "d",
+              "M 0,0 Q " +
+                (rmax * distance_scale) / 2 +
+                "," +
+                (rmax * _b * distance_scale) / 2 +
+                " " +
+                rmax * distance_scale +
+                ",0"
+            );
+          document.getElementById("R").innerText = rmax.toFixed(2);
+          document.getElementById("hmax").innerText = hmax.toFixed(2);
+          document.getElementById("T").innerText = totalTime.toFixed(2);
+        }
+        play = true;
+        document.getElementById("play").style.backgroundImage =
+          'url("/img/pause.png")';
+        if (startTime != 0) {
+          elapsedTime = currentTime;
+          startTime = 0;
+        }
+        // startTime =
+        //   startTime +
+        //   (Date.now() - currentTime * 1000 - startTime) * time_scale;
+        // -elapsedTime
+        vx.innerText = v0_x.toFixed(2);
+        interval_id = setInterval(_nextFrameSimulation, 1000 / refresh_rate);
+      }
+    });
+
+    function _nextFrameSimulation() {
+      if (startTime == 0) startTime = Date.now();
+      if (currentTime == totalTime) {
+        running = false;
+        startTime = 0;
+        currentTime = 0;
+        elapsedTime = 0;
+        document.getElementById("play").click();
+        return;
+      }
+      currentTime =
+        elapsedTime + ((Date.now() - startTime) / 1000) * time_scale;
+      if (currentTime > totalTime) {
+        currentTime = totalTime;
+      }
+
+      // if (currentTime > totalTime) currentTime = totalTime;
+
+      ball_x = v0_x * currentTime;
+      ball_y = v0_y * currentTime - (gravity * currentTime ** 2) / 2;
+      ball_vy = v0_y - gravity * currentTime;
+      ball_v = Math.sqrt(ball_vx ** 2 + ball_vy ** 2);
+      ball_angle = Math.atan(ball_vy / ball_vx);
+
+      timeElement.innerText = currentTime.toFixed(2) + "s";
+      ball.style.left = ball_x * distance_scale + "px";
+      ball.style.bottom = ball_y * distance_scale + "px";
+      vy.innerText = ball_vy.toFixed(2);
+      ht.innerText = ball_y.toFixed(2);
+    }
+    parseRefresh(null);
+  </script>
+</html>
