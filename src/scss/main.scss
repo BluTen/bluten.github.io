@@ -191,9 +191,7 @@ nav {
   cursor: pointer;
   position: relative;
   font-size: 1.2rem;
-  color: $secondary-text;
   border-radius: 4px;
-  background-color: $primary-action;
   z-index: 1;
 }
 
@@ -215,10 +213,19 @@ nav {
   width: 100%;
 }
 
+.proj-container {
+  display: flex;
+  margin: 3rem 0;
+  border-radius: 8px;
+  color: $primary-action;
+  background-color: $primary-text;
+  align-content: stretch;
+  justify-content: flex-start;
+}
+
 .proj-title {
   padding-bottom: 5px;
   color: $primary-action;
-  background-color: $primary-text;
 }
 
 .proj-title::after {
@@ -226,20 +233,21 @@ nav {
   background-color: $primary-action;
 }
 
-.proj-container {
-  display: flex;
-  margin: 3rem 0;
-  border-radius: 8px;
-  color: $primary-action;
-  background-color: $primary-text;
-}
-
 .proj-img {
+  flex-shrink: 0;
   background-color: red;
   width: 35%;
   max-width: 500px;
   border-radius: 8px 0 0 8px;
+  background-image: url("/img/projectile_thumbnail.png");
+  background-position: left bottom;
+  background-size: cover;
 }
+
+// .proj-img img {
+//   height: 100%;
+//   width: 100%;
+// }
 
 .proj-detail {
   padding: 1.5rem;
@@ -261,13 +269,13 @@ nav {
 .proj-action {
   display: flex;
   padding-top: 1.5rem;
+  gap: 1.5rem;
 }
 
 .download,
 .github,
 .link {
   // background-color: #1baa4f;
-  margin-right: 2rem;
   color: #fff;
 
   .btn-text {
@@ -405,6 +413,11 @@ nav {
     border-radius: 8px 8px 0 0;
   }
 
+  .proj-title {
+    text-align: center;
+    display: inline-block;
+  }
+
   .proj-detail {
     width: 100%;
   }
@@ -497,8 +510,8 @@ nav {
   }
 
   .github,
-  .download {
+  .download,
+  .link {
     margin: 0;
-    margin-bottom: 1.5rem;
   }
 }
